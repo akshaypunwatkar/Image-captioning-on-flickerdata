@@ -19,40 +19,40 @@
 
       <p class = "desc-text">Add Caption to any image!</p>
 
-      <p class = "desc-text">To get started click on the "Choose File" button and upload a file</p>
+      <p class = "desc-text">To get started click on the "Choose File" button and  upload a file</p>
 
       <form>
         <div>
           <label for="file">Choose a file to upload</label>
           <input id="file" name="file" type="file">
-          <p id="file-name"></p>
+          <p id="file-name">No file uploaded</p>
         </div>
         <div><button id="submit-button">Submit</button></div>
       </form>
 
       <script>
       const fileInput = document.querySelector('#file');
-      const fileList = document.querySelector('#file-name');
+      const fileName = document.querySelector('#file-name');
 
-      fileInput.addEventListener('change', fileInfo);
+      fileInput.addEventListener('change', updateFileName);
 
-      function fileInfo(){
-          var fileName = document.getElementById('#file').files[0].name;
-          var fileSize = document.getElementById('#file').files[0].size;
-          var fileType = document.getElementById('#file').files[0].type;
-
-          var file_info = fileName+"\n"+fileSize+"\n"+fileType;
-      }
+      function updateFileName() {
 
         let curFiles = fileInput.files;
 
         if(!(curFiles.length === 0))  {
-          console.log('test');
-          for(let i = 0; i < curFiles.length; i++) {
-            const listItem = document.createElement('p');
-            listItem.textContent = file_info;
-            //fileList.appendChild(listItem);
-          }
+            console.log('test');
+            fileName.innerHTML = 'File name: ' + curFiles[0].name + '; file size ' + returnFileSize(curFiles[0].size) + '.';
+        }
+      }
+
+      function returnFileSize(number) {
+        if(number < 1024) {
+          return number + 'bytes';
+        } else if(number >= 1024 && number < 1048576) {
+          return (number/1024).toFixed(1) + 'KB';
+        } else if(number >= 1048576) {
+          return (number/1048576).toFixed(1) + 'MB';
         }
       }
 
