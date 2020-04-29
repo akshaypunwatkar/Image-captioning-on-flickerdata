@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="UTF-8">
+      <link rel="stylesheet" type="text/css" href="CG.css">
+      <title>Caption Generator</title>
+  </head>
+
+  <body>
+
+    <div class="hero-unit">
+    <div class="hero-unit__background-image">
+    </div>
+    </div>
+
+    <div class="main-card">
+      <img id="logo" src = "camera.png">
+      <h3 id="main-heading">Caption Generator</h3>
+
+      <p class = "desc-text">Add Caption to any image!</p>
+
+      <p class = "desc-text">To get started click on the "Choose File" button to upload a file</p>
+
+      <form>
+        <div>
+          <label for="file">Choose a file to upload</label>
+          <input id="file" name="file" type="file">
+          <p id="file-name"></p>
+        </div>
+        <div><button id="submit-button">Submit</button></div>
+      </form>
+
+      <script>
+      const fileInput = document.querySelector('#file');
+      const fileList = document.querySelector('#file-name');
+
+      fileInput.addEventListener('change', fileInfo);
+
+      function fileInfo(){
+          var fileName = document.getElementById('#file').files[0].name;
+          var fileSize = document.getElementById('#file').files[0].size;
+          var fileType = document.getElementById('#file').files[0].type;
+
+          var file_info = fileName+"\n"+fileSize+"\n"+fileType;
+      }
+
+        let curFiles = fileInput.files;
+
+        if(!(curFiles.length === 0))  {
+          console.log('test');
+          for(let i = 0; i < curFiles.length; i++) {
+            const listItem = document.createElement('p');
+            listItem.textContent = file_info;
+            //fileList.appendChild(listItem);
+          }
+        }
+      }
+
+      </script>
+
+
+  </body>
+
+</html>
