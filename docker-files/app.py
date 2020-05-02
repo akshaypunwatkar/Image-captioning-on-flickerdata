@@ -2,6 +2,7 @@ from flask import Flask,request, jsonify, render_template, redirect, url_for, se
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
+from werkzeug.utils import secure_filename
 import re
 import numpy as np
 import os
@@ -87,6 +88,7 @@ def load_image(image_path,is_url=False):
     if is_url:
         img = tf.image.decode_jpeg(requests.get(image_path).content, channels=3)
     else:
+        print(image_path)
         img = tf.io.read_file(image_path)
         img = tf.image.decode_jpeg(img, channels=3)
 
@@ -176,25 +178,16 @@ def uploader():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file',
-                                        filename=filename))
+            result, attention_plot = evaluate("uploads/" + filename, encoder1, decoder1,False)
+            return " ".join(result[:-1])
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
 
-#GUI predict
-@app.route('/results')
-def predict_gui():
-    return "something"
-
-
-#REST API
-@app.route('/predict',methods=['POST','GET'])
-def predict_rest():
-    data = {"success": False}
-
+@app.route('/predict_api',methods=['POST','GET'])
+def predict():
     if request.method in ["POST","GET"]:
         if request.form.get("filepath"):
             path = request.form.get("filepath")
@@ -212,6 +205,7 @@ def predict_rest():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8088, debug=True,threaded=False)
+
 
 #curl -X GET -F filepath=images/COCO_train2014_000000050592.jpg 'http://localhost:8088/predict'
 #curl -X POST -F filepath=images/COCO_train2014_000000050592.jpg 'http://localhost:8088/predict'
