@@ -41,7 +41,9 @@ This app was deployed ...
 
 ## Load Testing
 
-We used the Locust Software on the Google Kubernetes engine to check our app for load testing. 
+We used the Locust Software on the Google Kubernetes engine to check our app for load testing. For this, we followed the step-by-step tutorial given [here](https://cloud.google.com/solutions/distributed-load-testing-using-gke).
+
+Further details on the performance can be seen in the demo video linked below.
 
 ## Demo Video
 
