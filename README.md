@@ -25,7 +25,7 @@ The model was trained using Tensorflow and the methodology was based on the note
 
 * Tokenize vocabulary from Training captions data
 * Implement a seq2seq additive attention model using Bahdanau Attention
-* USe a CNN encoder & RNN decoder to train the model for caption prediction
+* Use a CNN encoder & RNN decoder to train the model for caption prediction
 * Test the model on a test dataset
 
 The model was adjusted and trained to fir our requiremets for the app.
