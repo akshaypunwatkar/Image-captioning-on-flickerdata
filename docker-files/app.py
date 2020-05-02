@@ -7,6 +7,7 @@ import numpy as np
 import os
 import time
 import json
+import requests
 from glob import glob
 from PIL import Image
 import pickle
@@ -76,19 +77,25 @@ class RNN_Decoder(tf.keras.Model):
   		return tf.zeros((batch_size, self.units))
 
 
-def load_image(image_path):
-    img = tf.io.read_file(image_path)
-    img = tf.image.decode_jpeg(img, channels=3)
+def load_image(image_path,is_url=False):
+    if is_url:
+        img = tf.image.decode_jpeg(requests.get(image_path).content, channels=3)
+    else:
+        img = tf.io.read_file(image_path)    
+        img = tf.image.decode_jpeg(img, channels=3)
+
     img = tf.image.resize(img, (299, 299))
     img = tf.keras.applications.inception_v3.preprocess_input(img)
     return img, image_path
 
-def evaluate(image, encoder1, decoder1):
+def evaluate(image, encoder1, decoder1,url_flag=False):
     attention_plot = np.zeros((max_length, attention_features_shape))
 
     hidden = decoder1.reset_state(batch_size=1)
 
-    temp_input = tf.expand_dims(load_image(image)[0], 0)
+    #loading image
+    temp_input = tf.expand_dims(load_image(image,url_flag)[0], 0)
+
     img_tensor_val = image_features_extract_model(temp_input)
     img_tensor_val = tf.reshape(img_tensor_val, (img_tensor_val.shape[0], -1, img_tensor_val.shape[3]))
 
@@ -141,18 +148,28 @@ decoder1.load_weights('weights/decoder.h5')
 #Default Page
 @app.route('/')
 def hello():
-
     return render_template("index.html")
+
+#GUI predict
+@app.route('/results')
+def predict_gui():
+    return "something"
+
 
 #REST API
 @app.route('/predict',methods=['POST','GET'])    
-def predict():
+def predict_rest():
     data = {"success": False}
 
     if request.method in ["POST","GET"]:
         if request.form.get("filepath"):
             path = request.form.get("filepath")
-            result, attention_plot = evaluate(path, encoder1, decoder1)
+            is_url = False 
+            #checking if the input path is a URL 
+            if path.startswith("http"):
+                is_url = True
+            #making the prediction for the caption    
+            result, attention_plot = evaluate(path, encoder1, decoder1,is_url)
             data["caption"] = " ".join(result[:-1])
             data['filepath'] = path
             data["success"] = True
@@ -164,6 +181,7 @@ if __name__ == '__main__':
 
 #curl -X GET -F filepath=images/COCO_train2014_000000050592.jpg 'http://localhost:8088/predict'
 #curl -X POST -F filepath=images/COCO_train2014_000000050592.jpg 'http://localhost:8088/predict'
+#curl -X GET -F filepath=https://media.stadiumtalk.com/51/78/5178471c78244562a6fa79e0e14d7a32.jpg 'http://localhost:8088/predict'
 
 
 
