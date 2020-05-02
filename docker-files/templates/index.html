@@ -21,13 +21,11 @@
 
       <p class = "desc-text">To get started click on the "Choose File" button and  upload a file</p>
 
-      <form>
-        <div>
+      <form action = "http://localhost:5000/uploader" method = "POST" enctype = "multipart/form-data">
           <label for="file">Choose a file to upload</label>
           <input id="file" name="file" type="file">
           <p id="file-name">No file uploaded</p>
-        </div>
-        <div><button id="submit-button">Submit</button></div>
+          <input type="submit" id="submit-button" value="Generate Caption!">
       </form>
 
       <script>
