@@ -24,7 +24,7 @@ The training and test data for the application and the demo are as follows:
 The model was trained using Tensorflow and the methodology was based on the notebook provided by Google Colab. The basic steps in training this model were as follows:
 
 * Tokenize vocabulary from Training captions data
-* Implement a seq2seq additive attention model using Bahdanau Attention
+* Implement a Bahdanau Attention recurrent neural network
 * Use a CNN encoder & RNN decoder to train the model for caption prediction
 * Test the model on a test dataset
 
