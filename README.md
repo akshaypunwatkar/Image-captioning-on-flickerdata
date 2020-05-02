@@ -28,7 +28,7 @@ The model was trained using Tensorflow and the methodology was based on the note
 * Use a CNN encoder & RNN decoder to train the model for caption prediction
 * Test the model on a test dataset
 
-The model was adjusted and trained to fir our requiremets for the app.
+The model was adjusted and trained to fit our requiremets for the app.
 
 ### Sample Output
 
