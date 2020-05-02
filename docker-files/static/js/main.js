@@ -11,12 +11,16 @@ $(document).ready(function () {
             reader.onload = function (e) {
                 $('#imagePreview').css('background-image', 'url(' + e.target.result + ')');
                 $('#imagePreview').hide();
+              console.log(e)
+                $('#imagePreview').css('background-image', 'url(' + e.target.result + ')');
+                $('#imagePreview').show();
                 $('#imagePreview').fadeIn(650);
             }
             reader.readAsDataURL(input.files[0]);
         }
     }
-    $("#imageUpload").change(function () {
+
+    $("#file").change(function () {
         $('.image-section').show();
         $('#btn-predict').show();
         $('#result').text('');
@@ -50,5 +54,4 @@ $(document).ready(function () {
             },
         });
     });
-
 });

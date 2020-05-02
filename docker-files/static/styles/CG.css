@@ -18,7 +18,7 @@
   font-size: 30px;
   text-align: center;
   margin-top: 2%;
-  margin-bottom: 10%;
+  margin-bottom: 1%;
 }
 
 #logo {
@@ -26,7 +26,7 @@
   width: 60px;
   float: left;
   margin-left: 20%;
-  margin-right: -25%;
+  margin-right: -20%;
 }
 
 .topnav {
@@ -41,11 +41,11 @@
 
 .main-card {
   position: absolute;
-  height: 60%;
+  height: 70%;
   width: 40%;
   margin-right: 30%;
   margin-left: 30%;
-  margin-top: 10%;
+  margin-top: 5%;
   background-color: #111010;
   opacity: 0.95;
   box-shadow: 15px 15px 30px #494646;
@@ -113,7 +113,7 @@ button {
   list-style-type: none;
 }
 
-#submit-button {
+#btn-predict {
   box-shadow: 1px 1px 3px #ccc;
   background: #F2F2F2;
   border: 1px solid rgb(169, 169, 169);
@@ -123,10 +123,38 @@ button {
   width: 30%;
 }
 
-#submit-button:hover {
+#btn-predict:hover {
   background: linear-gradient(to bottom, #fff, #ddd);
 }
 
-#submit-button:active {
+#btn-predict:active {
   box-shadow: inset 1px 1px 3px #ccc;
+}
+
+#result {
+  font-family: courier;
+  color: #F2F2F2;
+  font-size: 20px;
+  text-align: center;
+  margin-right: 2%;
+  margin-left: 2%;
+}
+
+.img-preview {
+    width: 256px;
+    height: 256px;
+    position: relative;
+    border: 5px solid #F2F2F2;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 30%;
+}
+
+.img-preview>div {
+    width: 100%;
+    height: 100%;
+    background-size: 256px 256px;
+    background-repeat: no-repeat;
+    background-position: center;
 }

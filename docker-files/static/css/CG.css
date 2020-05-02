@@ -113,20 +113,29 @@ button {
   list-style-type: none;
 }
 
-#submit-button {
+#btn-predict {
   box-shadow: 1px 1px 3px #ccc;
   background: #F2F2F2;
   border: 1px solid rgb(169, 169, 169);
   border-radius: 5px;
   text-align: center;
   line-height: 1.5;
-  width: 30%;
+  width: 40%;
 }
 
-#submit-button:hover {
+#btn-predict:hover {
   background: linear-gradient(to bottom, #fff, #ddd);
 }
 
-#submit-button:active {
+#btn-predict:active {
   box-shadow: inset 1px 1px 3px #ccc;
+}
+
+#result {
+  font-family: courier;
+  color: #F2F2F2;
+  font-size: 20px;
+  text-align: center;
+  margin-right: 2%;
+  margin-left: 2%;
 }

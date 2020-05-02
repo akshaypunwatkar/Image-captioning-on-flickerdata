@@ -1,4 +1,4 @@
-from flask import Flask,request, jsonify, render_template
+from flask import Flask,request, jsonify, render_template, redirect, url_for, send_from_directory
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
@@ -12,9 +12,15 @@ import requests
 from glob import glob
 from PIL import Image
 import pickle
+import logging
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
+UPLOAD_FOLDER = 'uploads/'
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 image_model = tf.keras.applications.InceptionV3(include_top=False,weights='imagenet')
 new_input = image_model.input
@@ -82,7 +88,8 @@ def load_image(image_path,is_url=False):
     if is_url:
         img = tf.image.decode_jpeg(requests.get(image_path).content, channels=3)
     else:
-        img = tf.io.read_file(image_path)    
+        print(image_path)
+        img = tf.io.read_file(image_path)
         img = tf.image.decode_jpeg(img, channels=3)
 
     img = tf.image.resize(img, (299, 299))
@@ -121,13 +128,17 @@ def evaluate(image, encoder1, decoder1,url_flag=False):
     attention_plot = attention_plot[:len(result), :]
     return result, attention_plot
 
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 embedding_dim = 256
 units = 512
 top_k = 5000
 max_length = 52
 vocab_size = top_k + 1
 features_shape = 2048
-attention_features_shape = 64   	
+attention_features_shape = 64
 
 
 with open('tokenizer.pickle', 'rb') as handle:
@@ -151,6 +162,12 @@ decoder1.load_weights('weights/decoder.h5')
 def hello():
     return render_template("index.html")
 
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
+
 #GUI predict
 @app.route('/predict', methods=['GET', 'POST'])
 def upload():
@@ -158,41 +175,35 @@ def upload():
         f = request.files['file']
         basepath = os.path.dirname(__file__)
         file_path = os.path.join(basepath, 'static', secure_filename(f.filename))
-        
+
         f.save(file_path)
         result, attention_plot = evaluate(file_path, encoder1, decoder1,False)
         result = " ".join(result[:-1])
         return result
 
 
-#REST API
-@app.route('/predict_api',methods=['POST','GET'])    
-def predict():
-    data = {"success": False}
 
+@app.route('/predict_api',methods=['POST','GET'])
+def predict():
     if request.method in ["POST","GET"]:
         if request.form.get("filepath"):
             path = request.form.get("filepath")
-            is_url = False 
-            #checking if the input path is a URL 
+            is_url = False
+            #checking if the input path is a URL
             if path.startswith("http"):
                 is_url = True
-            #making the prediction for the caption    
+            #making the prediction for the caption
             result, attention_plot = evaluate(path, encoder1, decoder1,is_url)
             data["caption"] = " ".join(result[:-1])
             data['filepath'] = path
             data["success"] = True
 
-    return jsonify(data) 
+    return jsonify(data)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8088, debug=True,threaded=False)
 
-#curl -X GET -F filepath=images/COCO_train2014_000000050592.jpg 'http://localhost:8088/predict_api'
-#curl -X POST -F filepath=images/COCO_train2014_000000050592.jpg 'http://localhost:8088/predict_api'
-#curl -X GET -F filepath=https://media.stadiumtalk.com/51/78/5178471c78244562a6fa79e0e14d7a32.jpg 'http://localhost:8088/predict_api'
 
-
-
-
-
+#curl -X GET -F filepath=images/COCO_train2014_000000050592.jpg 'http://localhost:8088/predict'
+#curl -X POST -F filepath=images/COCO_train2014_000000050592.jpg 'http://localhost:8088/predict'
+#curl -X GET -F filepath=https://media.stadiumtalk.com/51/78/5178471c78244562a6fa79e0e14d7a32.jpg 'http://localhost:8088/predict'
