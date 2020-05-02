@@ -185,6 +185,7 @@ def upload():
 
 @app.route('/predict_api',methods=['POST','GET'])
 def predict():
+    data = {"success": False}
     if request.method in ["POST","GET"]:
         if request.form.get("filepath"):
             path = request.form.get("filepath")
