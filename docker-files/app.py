@@ -187,8 +187,8 @@ def upload():
 def predict():
     data = {"success": False}
     if request.method in ["POST","GET"]:
-        if request.form.get("filepath"):
-            path = request.form.get("filepath")
+        if request.values.get("filepath"):
+            path = request.values.get("filepath")
             is_url = False
             #checking if the input path is a URL
             if path.startswith("http"):
