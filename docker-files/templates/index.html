@@ -1,64 +1,33 @@
-<!DOCTYPE html>
-<html>
-  <head>
-      <meta charset="UTF-8">
-      <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/CG.css')}}">
-      <title>Caption Generator</title>
-  </head>
+{% extends "import.html" %} 
+{% block content %}
 
-  <body>
+<center>
+<h2>Image Captioning Application</h2><br>
 
-    <div class="hero-unit">
-    <div class="hero-unit__background-image">
-    </div>
-    </div>
+<div>
+    <form id="upload-file" method="post" enctype="multipart/form-data">
+        <label for="imageUpload" class="btn btn-primary">
+            Upload Image
+        </label>
+        <input type="file" name="file" id="imageUpload" accept=".png, .jpg, .jpeg">
+    </form>
 
-    <div class="main-card">
-      <img id="logo" src = "/static/camera.png">
-      <h3 id="main-heading">Caption Generator</h3>
-
-      <p class = "desc-text">Add Caption to any image!</p>
-
-      <p class = "desc-text">To get started click on the "Choose File" button and  upload a file</p>
-
-      <form>
-        <div>
-          <label for="file">Choose a file to upload</label>
-          <input id="file" name="file" type="file">
-          <p id="file-name">No file uploaded</p>
+    <div class="image-section" style="display:none;">
+        <div class="img-preview">
+            <div id="imagePreview">
+            </div>
         </div>
-        <div><button id="submit-button">Submit</button></div>
-      </form>
+        <div>
+            <button type="button" class="btn btn-info btn-lg " id="btn-predict">Predict Caption</button>
+        </div>
+    </div>
 
-      <script>
-      const fileInput = document.querySelector('#file');
-      const fileName = document.querySelector('#file-name');
+    <div class="loader" style="display:none;"></div>
 
-      fileInput.addEventListener('change', updateFileName);
+    <h3 id="result">
+        <span> </span>
+    </h3>
 
-      function updateFileName() {
-
-        let curFiles = fileInput.files;
-
-        if(!(curFiles.length === 0))  {
-            console.log('test');
-            fileName.innerHTML = 'File name: ' + curFiles[0].name + '; file size ' + returnFileSize(curFiles[0].size) + '.';
-        }
-      }
-
-      function returnFileSize(number) {
-        if(number < 1024) {
-          return number + 'bytes';
-        } else if(number >= 1024 && number < 1048576) {
-          return (number/1024).toFixed(1) + 'KB';
-        } else if(number >= 1048576) {
-          return (number/1048576).toFixed(1) + 'MB';
-        }
-      }
-
-      </script>
-
-
-  </body>
-
-</html>
+</div>
+</center><br><br>
+{% endblock %}

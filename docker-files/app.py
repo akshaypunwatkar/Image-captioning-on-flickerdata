@@ -2,6 +2,7 @@ from flask import Flask,request, jsonify, render_template
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
+from werkzeug.utils import secure_filename
 import re
 import numpy as np
 import os
@@ -151,14 +152,22 @@ def hello():
     return render_template("index.html")
 
 #GUI predict
-@app.route('/results')
-def predict_gui():
-    return "something"
+@app.route('/predict', methods=['GET', 'POST'])
+def upload():
+    if request.method in ['POST','GET']:
+        f = request.files['file']
+        basepath = os.path.dirname(__file__)
+        file_path = os.path.join(basepath, 'static', secure_filename(f.filename))
+        
+        f.save(file_path)
+        result, attention_plot = evaluate(file_path, encoder1, decoder1,False)
+        result = " ".join(result[:-1])
+        return result
 
 
 #REST API
-@app.route('/predict',methods=['POST','GET'])    
-def predict_rest():
+@app.route('/predict_api',methods=['POST','GET'])    
+def predict():
     data = {"success": False}
 
     if request.method in ["POST","GET"]:
@@ -179,9 +188,9 @@ def predict_rest():
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8088, debug=True,threaded=False)
 
-#curl -X GET -F filepath=images/COCO_train2014_000000050592.jpg 'http://localhost:8088/predict'
-#curl -X POST -F filepath=images/COCO_train2014_000000050592.jpg 'http://localhost:8088/predict'
-#curl -X GET -F filepath=https://media.stadiumtalk.com/51/78/5178471c78244562a6fa79e0e14d7a32.jpg 'http://localhost:8088/predict'
+#curl -X GET -F filepath=images/COCO_train2014_000000050592.jpg 'http://localhost:8088/predict_api'
+#curl -X POST -F filepath=images/COCO_train2014_000000050592.jpg 'http://localhost:8088/predict_api'
+#curl -X GET -F filepath=https://media.stadiumtalk.com/51/78/5178471c78244562a6fa79e0e14d7a32.jpg 'http://localhost:8088/predict_api'
 
 
 
