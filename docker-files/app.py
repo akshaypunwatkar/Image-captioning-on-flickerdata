@@ -2,6 +2,7 @@ from flask import Flask,request, jsonify, render_template, redirect, url_for, se
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from sklearn.utils import shuffle
+from werkzeug.utils import secure_filename
 import re
 import numpy as np
 import os
@@ -185,16 +186,21 @@ def uploaded_file(filename):
                                filename)
 
 #GUI predict
-@app.route('/results')
-def predict_gui():
-    return "something"
+@app.route('/predict', methods=['GET', 'POST'])
+def upload():
+    if request.method in ['POST','GET']:
+        f = request.files['file']
+        basepath = os.path.dirname(__file__)
+        file_path = os.path.join(basepath, 'static', secure_filename(f.filename))
+
+        f.save(file_path)
+        result, attention_plot = evaluate(file_path, encoder1, decoder1,False)
+        result = " ".join(result[:-1])
+        return result
 
 
-#REST API
-@app.route('/predict',methods=['POST','GET'])
-def predict_rest():
-    data = {"success": False}
-
+@app.route('/predict_api',methods=['POST','GET'])
+def predict():
     if request.method in ["POST","GET"]:
         if request.form.get("filepath"):
             path = request.form.get("filepath")
