@@ -162,29 +162,26 @@ decoder1.load_weights('weights/decoder.h5')
 def hello():
     return render_template("index.html")
 
-@app.route('/uploader', methods=['POST'])
-def uploader():
-    logging.warning('I hit the uploader endpoint')
-    if request.method == 'POST':
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-            # if user does not select file, browser also
-            # submit an empty part without filename
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            result, attention_plot = evaluate("uploads/" + filename, encoder1, decoder1,False)
-            return " ".join(result[:-1])
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
+
+#GUI predict
+@app.route('/predict', methods=['GET', 'POST'])
+def upload():
+    if request.method in ['POST','GET']:
+        f = request.files['file']
+        basepath = os.path.dirname(__file__)
+        file_path = os.path.join(basepath, 'static', secure_filename(f.filename))
+
+        f.save(file_path)
+        result, attention_plot = evaluate(file_path, encoder1, decoder1,False)
+        result = " ".join(result[:-1])
+        return result
+
+
 
 @app.route('/predict_api',methods=['POST','GET'])
 def predict():
