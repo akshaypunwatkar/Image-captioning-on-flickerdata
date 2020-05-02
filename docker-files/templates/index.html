@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="UTF-8">
+      <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/CG.css')}}">
+      <title>Caption Generator</title>
+  </head>
+
+  <body>
+
+    <div class="hero-unit">
+    <div class="hero-unit__background-image">
+    </div>
+    </div>
+
+    <div class="main-card">
+      <img id="logo" src = "/static/camera.png">
+      <h3 id="main-heading">Caption Generator</h3>
+
+      <p class = "desc-text">Add Caption to any image!</p>
+
+      <p class = "desc-text">To get started click on the "Choose File" button and  upload a file</p>
+
+      <form>
+        <div>
+          <label for="file">Choose a file to upload</label>
+          <input id="file" name="file" type="file">
+          <p id="file-name">No file uploaded</p>
+        </div>
+        <div><button id="submit-button">Submit</button></div>
+      </form>
+
+      <script>
+      const fileInput = document.querySelector('#file');
+      const fileName = document.querySelector('#file-name');
+
+      fileInput.addEventListener('change', updateFileName);
+
+      function updateFileName() {
+
+        let curFiles = fileInput.files;
+
+        if(!(curFiles.length === 0))  {
+            console.log('test');
+            fileName.innerHTML = 'File name: ' + curFiles[0].name + '; file size ' + returnFileSize(curFiles[0].size) + '.';
+        }
+      }
+
+      function returnFileSize(number) {
+        if(number < 1024) {
+          return number + 'bytes';
+        } else if(number >= 1024 && number < 1048576) {
+          return (number/1024).toFixed(1) + 'KB';
+        } else if(number >= 1048576) {
+          return (number/1048576).toFixed(1) + 'MB';
+        }
+      }
+
+      </script>
+
+
+  </body>
+
+</html>
