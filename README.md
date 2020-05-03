@@ -9,7 +9,7 @@ This project was implemented by:
 
 and was submitted as our final project for the course ECE 590 (Data Analysis at Scale in the Cloud).
 
-[Application Link](http://34.71.22.23:8088)
+[Link to the application](http://34.71.22.23:8088)
 
 ## Objective of the Application
 
