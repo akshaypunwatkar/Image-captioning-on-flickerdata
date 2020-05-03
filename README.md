@@ -47,4 +47,4 @@ Further details on the performance can be seen in the demo video linked below.
 
 ## Demo Video
 
-Link to the video: here
+Link to the video: [here](https://youtu.be/zaQ3NOj1oJo)
