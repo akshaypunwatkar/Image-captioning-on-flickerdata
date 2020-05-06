@@ -7,7 +7,7 @@ This project was implemented by:
 * Anshupriya Srivastava
 * Srishti Saha
 
-and was submitted as our final project for the course ECE 590 (Data Analysis at Scale in the Cloud).
+and was submitted as our final project for the course ECE 590 (Data Analysis at Scale in the Cloud) at Duke University.
 
 [Link to the application](http://35.243.242.165)
 
@@ -45,6 +45,8 @@ Application also provide **REST** response, both for local and web-url files:
 
 The application was deployed using **Kubernetes on Google cloud platform**.    
 Container image from docker hub can be accessed from here: [Link to Container Image](https://hub.docker.com/repository/docker/akshaypunwatkar/image-caption-v2)
+
+Steps to deploy the app on a Kubernetes Engine can be found [here](https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app)
 
 Post deployment the app could be accessed on the link: http://34.71.22.23:8088
 
